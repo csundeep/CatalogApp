@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% extends "main.html" %}
+{% block content %}
+<h1>Edit Item</h1>
+
+<div class="card form-card">
+    <div class="card-block">
+        <form action="{{url_for('editItem',item_name=item.name )}}" method='POST'>
+            <div class="form-group">
+                <label for="selectCatalog">Select Catalog</label>
+                <select class="form-control" name="catalog" id="selectCatalog">
+                    {% for i in catalogs %}
+                    <option value="{{i.name}}">{{i.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="itemName">Item Name</label>
+                <input type="text" class="form-control" id="itemName" name='name' value="{{item.name}}"
+                       placeholder="Enter Item Name">
+            </div>
+            <div class="form-group">
+                <label for="description">Enter Description</label>
+                <textarea class="form-control" id="description" name="description"
+                          rows="3">{{item.description}}</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Edit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

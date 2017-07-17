@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+{% extends "main.html" %}
+{% block content %}
+<div class="center-block">
+    <div class="card item-card">
+        <img class="card-img-top" src="/static/card_image.jpg">
+        <div class="card-block">
+            <h4 class="card-title">{{item.name}}</h4>
+            <p class="card-text">{{item.description}}</p>
+        </div>
+        <div class="card-footer">
+            {% if session.username %}
+            <a href="{{ url_for('editItem',item_name=item.name) }}">Edit </a> <a
+                href="{{ url_for('deleteItem',item_name=item.name) }}">Delete</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
