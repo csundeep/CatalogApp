@@ -22,22 +22,47 @@ CLIENT_ID = json.loads(
 APPLICATION_NAME = "Item Catalog Application"
 
 
+# user registration functionality
 @app.route('/registration', methods=['GET', 'POST'])
 def showRegistration():
-    return render_template('loginRegistration.html')
+    if request.method == 'POST':
+        user_name = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+
+        login_session['username'] = user_name
+        login_session['email'] = email
+        login_session['picture'] = None
+        print(login_session['email'])
+
+        user_id = createUser(login_session, password)
+        print(user_id)
+        if user_id:
+            login_session['user_id'] = user_id
+            print(user_id)
+            return redirect('/')
+        else:
+            del login_session['username']
+            del login_session['email']
 
 
+# user login functionality
 @app.route('/login', methods=['GET', 'POST'])
 def showLogin():
     if request.method == 'POST':
         user_name = request.form['username']
         password = request.form['password']
         print(user_name + " " + password)
-        if verify_credentials(user_name, password):
-            login_session['username'] = user_name
+        user = verify_credentials(user_name, password)
+        if user:
+            login_session['username'] = user.name
+            login_session['picture'] = user.picture
+            login_session['email'] = user.email
+            login_session['user_id'] = user.id
             return redirect(url_for('show_latest_items'))
         else:
-            return redirect(url_for('loginRegistration'))
+            error = 'Invalid Credentials. Please try again.'
+            return render_template('loginRegistration.html', error=error)
     else:
         state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                         for x in range(32))
@@ -46,6 +71,7 @@ def showLogin():
         return render_template('loginRegistration.html', STATE=state)
 
 
+# Google OAuth connect
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
@@ -132,6 +158,7 @@ def gconnect():
     return "success"
 
 
+# Facebook OAuth connect
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
     if request.args.get('state') != login_session['state']:
@@ -202,6 +229,7 @@ def fbconnect():
     return "success"
 
 
+# logout functionality
 @app.route('/logout')
 def showLogout():
     if 'provider' in login_session:
@@ -219,6 +247,14 @@ def showLogout():
         del login_session['provider']
         return redirect(url_for('show_latest_items'))
     else:
+        if login_session['username']:
+            del login_session['username']
+        if login_session['email']:
+            del login_session['email']
+        if login_session['picture']:
+            del login_session['picture']
+        if login_session['user_id']:
+            del login_session['user_id']
         return redirect(url_for('show_latest_items'))
 
 
@@ -253,6 +289,7 @@ def gdisconnect():
         return response
 
 
+# functionality to display categories and latest items
 @app.route('/')
 @app.route('/catalog')
 def show_latest_items():
@@ -261,6 +298,7 @@ def show_latest_items():
     return render_template("catalogs.html", catalogs=catalogs, items=items)
 
 
+# functionality to display categories and there respective items
 @app.route('/catalog/<string:catalog_name>/items')
 def show_catalog_items(catalog_name):
     catalogs = get_catalogs()
@@ -269,12 +307,14 @@ def show_catalog_items(catalog_name):
     return render_template("catalogItems.html", catalog=catalog_name, catalogs=catalogs, items=items)
 
 
+# functionality to display categories item description
 @app.route('/catalog/<string:catalog_name>/<string:item_name>')
 def show_catalog_item_description(catalog_name, item_name):
     catalog_item = get_catalog_item_by_name(item_name)
     return render_template("itemDescription.html", item=catalog_item)
 
 
+# functionality to create an item of given category
 @app.route('/catalog/new/', methods=['GET', 'POST'])
 def newItem():
     if 'username' not in login_session:
@@ -295,6 +335,7 @@ def newItem():
         return render_template('newItem.html', catalogs=catalogs)
 
 
+# functionality to edit item
 @app.route('/catalog/<string:item_name>/edit/', methods=['GET', 'POST'])
 def editItem(item_name):
     if 'username' not in login_session:
@@ -313,6 +354,7 @@ def editItem(item_name):
         return render_template('editItem.html', item=item, catalogs=catalogs)
 
 
+# functionality to delete item
 @app.route('/catalog/<string:item_name>/delete/', methods=['GET', 'POST'])
 def deleteItem(item_name):
     if 'username' not in login_session:
@@ -325,6 +367,7 @@ def deleteItem(item_name):
         return render_template('deleteItem.html', item=item)
 
 
+# functionality to display json data of all the information
 @app.route('/catalog.json')
 def show_all_catalog_items_json():
     catalogs = get_catalogs()
@@ -336,6 +379,7 @@ def show_all_catalog_items_json():
     return jsonify(Catalogs=catalog_serialize)
 
 
+# functionality to display json data of given category
 @app.route('/catalog/<string:catalog_name>/items/json')
 def show_catalog_items_json(catalog_name):
     catalog = get_catolog_by_name(catalog_name)

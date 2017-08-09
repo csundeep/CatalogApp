@@ -85,17 +85,29 @@ session.add(catalog2)
 session.commit()
 
 catalog_item = CatalogItem(user_id=1, name="Soccer Ball",
-                           description="", catalog=catalog2)
+                           description="A football, soccer ball, or association football ball is the ball "
+                                       "used in the sport of association football. The name of the ball "
+                                       "varies according to whether the sport is called 'football', "
+                                       "'soccer', or 'association football'",
+                           catalog=catalog2)
 session.add(catalog_item)
 session.commit()
 
 catalog_item = CatalogItem(user_id=1, name="Goal Post",
-                           description="", catalog=catalog2)
+                           description="Hurling and Gaelic football use the same goal structure. ... "
+                                       "The goal posts are at least 6 meters high, and the crossbar is 2.44 "
+                                       "meters above the ground. A goal is scored when the "
+                                       "ball crosses below the crossbar and a point "
+                                       "is scored when the ball passes above it.", catalog=catalog2)
 session.add(catalog_item)
 session.commit()
 
-catalog_item = CatalogItem(user_id=1, name="Goal Jersy",
-                           description="", catalog=catalog2)
+catalog_item = CatalogItem(user_id=1, name="Soccer Jersey",
+                           description="While the replica jersey is made of 100 percent polyester, "
+                                       "the authentic incorporates lycra that allows it to stretch "
+                                       "around your muscles like a compression shirt. PUMA authentic "
+                                       "jerseys feature a technology called powerCELL, while the "
+                                       "replica fabric is made with dryCELL", catalog=catalog2)
 session.add(catalog_item)
 session.commit()
 
@@ -106,38 +118,66 @@ session.add(catalog3)
 session.commit()
 
 catalog_item = CatalogItem(user_id=1, name="Tennis Ball",
-                           description="", catalog=catalog3)
+                           description="A tennis ball is a ball designed for the sport of tennis. "
+                                       "Tennis balls are fluorescent yellow at major sporting events,"
+                                       " but in recreational play can be virtually any color. "
+                                       "Tennis balls are covered in a fibrous felt which "
+                                       "modifies their aerodynamic properties, and each has a "
+                                       "white curvilinear oval covering it", catalog=catalog3)
 session.add(catalog_item)
 session.commit()
 
 catalog_item = CatalogItem(user_id=1, name="Tennis Racket",
-                           description="", catalog=catalog3)
+                           description="A racket or racquet is a sports implement consisting of a "
+                                       "handled frame with an open hoop across which a network of"
+                                       " strings or catgut is stretched tightly. It is used for striking "
+                                       "a ball or shuttlecock in games such as squash, tennis, racquetball, "
+                                       "and badminton. ... Wood is still used for real tennis, rackets,"
+                                       " and xare", catalog=catalog3)
 session.add(catalog_item)
 session.commit()
 
 catalog_item = CatalogItem(user_id=1, name="Tennis Net",
-                           description="", catalog=catalog3)
+                           description="If a doubles net is used, then the net shall be supported,"
+                                       " at a height of 3 ½ feet (1.07 m), "
+                                       "by two singles sticks, the centres of which shall be 3 feet (0.914 m) "
+                                       "outside the singles court on each side. "
+                                       "The net posts shall not be more than 6 inches (15 cm) "
+                                       "square or 6 inches (15 cm) n diameter.", catalog=catalog3)
 session.add(catalog_item)
 session.commit()
 
 # Catalog Batmenton
-catalog4 = Catalog(name="Batmenton")
+catalog4 = Catalog(name="Badminton")
 
 session.add(catalog4)
 session.commit()
 
-catalog_item = CatalogItem(user_id=1, name="Batmenton Ball",
-                           description="", catalog=catalog4)
+catalog_item = CatalogItem(user_id=1, name="Badminton Shuttle",
+                           description="A shuttlecock (often abbreviated to shuttle; also called a birdie)"
+                                       " is a high-drag projectile, with an open conical shape: the cone is "
+                                       "formed from sixteen overlapping feathers embedded into a rounded cork base. "
+                                       "The cork is covered with thin leather or synthetic material.", catalog=catalog4)
 session.add(catalog_item)
 session.commit()
 
-catalog_item = CatalogItem(user_id=1, name="Batmenton Racket",
-                           description="", catalog=catalog4)
+catalog_item = CatalogItem(user_id=1, name="Badminton Racket",
+                           description="A racket or racquet is a sports implement consisting of a "
+                                       "handled frame with an open hoop across which a network of"
+                                       " strings or catgut is stretched tightly. It is used for striking "
+                                       "a ball or shuttlecock in games such as squash, tennis, racquetball, "
+                                       "and badminton. ... Wood is still used for real tennis, rackets,"
+                                       " and xare", catalog=catalog4)
 session.add(catalog_item)
 session.commit()
 
-catalog_item = CatalogItem(user_id=1, name="Batmenton Net",
-                           description="", catalog=catalog4)
+catalog_item = CatalogItem(user_id=1, name="Badminton Net",
+                           description="If a doubles net is used, then the net shall be supported,"
+                                       " at a height of 3 ½ feet (1.07 m), "
+                                       "by two singles sticks, the centres of which shall be 3 feet (0.914 m) "
+                                       "outside the singles court on each side. "
+                                       "The net posts shall not be more than 6 inches (15 cm) "
+                                       "square or 6 inches (15 cm) n diameter.", catalog=catalog4)
 session.add(catalog_item)
 session.commit()
 
