@@ -10,10 +10,18 @@ from flask import session as login_session
 from oauth2client.client import FlowExchangeError
 from oauth2client.client import flow_from_clientsecrets
 
-from catalog_data_access import get_catalogs, get_catolog_by_name, get_latest_items, get_catalog_item_by_name, \
-    get_items_by_catalog, \
-    persist_catalog_items, delete_catalog_item, verify_credentials, createUser, getUserID
+from catalog_data_access import (get_catalogs,
+                                 get_catolog_by_name,
+                                 get_latest_items,
+                                 get_catalog_item_by_name,
+                                 get_items_by_catalog,
+                                 persist_catalog_items,
+                                 delete_catalog_item,
+                                 verify_credentials,
+                                 createUser,
+                                 getUserID)
 from database_setup import CatalogItem
+from functools import wraps
 
 app = Flask(__name__)
 
@@ -89,7 +97,7 @@ def gconnect():
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
-    except FlowExchangeError as  e:
+    except FlowExchangeError as e:
         print(e)
         response = make_response(
             json.dumps('Failed to upgrade the authorization code.'), 401)
@@ -304,7 +312,8 @@ def show_catalog_items(catalog_name):
     catalogs = get_catalogs()
     catalog = get_catolog_by_name(catalog_name)
     items = get_items_by_catalog(catalog.id)
-    return render_template("catalogItems.html", catalog=catalog_name, catalogs=catalogs, items=items)
+    return render_template("catalogItems.html", catalog=catalog_name,
+                           catalogs=catalogs, items=items)
 
 
 # functionality to display categories item description
@@ -314,12 +323,20 @@ def show_catalog_item_description(catalog_name, item_name):
     return render_template("itemDescription.html", item=catalog_item)
 
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwrags):
+        if 'username' not in login_session:
+            return redirect('/login')
+        return f(*args, **kwrags)
+
+    return decorated_function
+
+
 # functionality to create an item of given category
 @app.route('/catalog/new/', methods=['GET', 'POST'])
+@login_required
 def newItem():
-    if 'username' not in login_session:
-        return redirect('/login')
-
     if request.method == 'POST':
         itemName = request.form['name']
         itemDescription = request.form['description']
@@ -337,10 +354,11 @@ def newItem():
 
 # functionality to edit item
 @app.route('/catalog/<string:item_name>/edit/', methods=['GET', 'POST'])
+@login_required
 def editItem(item_name):
-    if 'username' not in login_session:
-        return redirect('/login')
     item = get_catalog_item_by_name(item_name)
+    if item.user_id != login_session['user_id']:
+        return redirect(url_for('show_latest_items'))
     if request.method == 'POST':
         item.name = request.form['name']
         item.description = request.form['description']
@@ -350,16 +368,16 @@ def editItem(item_name):
         return redirect(url_for('show_latest_items'))
     else:
         catalogs = get_catalogs()
-        print("hello")
         return render_template('editItem.html', item=item, catalogs=catalogs)
 
 
 # functionality to delete item
 @app.route('/catalog/<string:item_name>/delete/', methods=['GET', 'POST'])
+@login_required
 def deleteItem(item_name):
-    if 'username' not in login_session:
-        return redirect('/login')
     item = get_catalog_item_by_name(item_name)
+    if item.user_id != login_session['user_id']:
+        return redirect(url_for('show_latest_items'))
     if request.method == 'POST':
         delete_catalog_item(item)
         return redirect(url_for('show_latest_items'))

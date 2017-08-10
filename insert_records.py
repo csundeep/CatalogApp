@@ -18,7 +18,7 @@ DBSession = sessionmaker(bind=engine)
 # session.rollback()
 session = DBSession()
 
-User1 = User(name="Chilukuri Sundeep", email="sandychowdary.535@gmail.com", password="Sandymask35",
+User1 = User(name="Chilukuri Sundeep", email="sandychowdary.08535@gmail.com", password="Sandymask35",
              picture='https://pbs.twimg.com/profile_images/2671170543/18debd694829ed78203a5a36dd364160_400x400.png')
 session.add(User1)
 session.commit()

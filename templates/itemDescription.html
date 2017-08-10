@@ -9,9 +9,12 @@
             <p class="card-text">{{item.description}}</p>
         </div>
         <div class="card-footer">
-            {% if session.username %}
+            {% if session.username and session.user_id==item.user_id %}
             <a href="{{ url_for('editItem',item_name=item.name) }}">Edit </a> <a
                 href="{{ url_for('deleteItem',item_name=item.name) }}">Delete</a>
+
+            {% else %}
+            <p style="color: blue"><i>You can only update or delete your own Item you created.</i> </p>
             {% endif %}
         </div>
     </div>
