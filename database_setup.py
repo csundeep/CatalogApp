@@ -37,7 +37,7 @@ class CatalogItem(Base):
 
     name = Column(String(80), nullable=False)
     id = Column(Integer, primary_key=True)
-    description = Column(String(250))
+    description = Column(String(1000))
     catalog_id = Column(Integer, ForeignKey('catalog.id'))
     catalog = relationship(Catalog)
     user_id = Column(Integer, ForeignKey('user.id'))
@@ -53,6 +53,6 @@ class CatalogItem(Base):
             'catalog_id': self.catalog_id,
         }
 
-
-engine = create_engine('sqlite:///itemsCatalog.db')
+engine =create_engine('postgresql://catalog:password@localhost:5432/itemcatalog')
+# engine = create_engine('sqlite:///itemsCatalog.db')
 Base.metadata.create_all(engine)
