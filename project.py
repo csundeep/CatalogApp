@@ -29,7 +29,7 @@ app = Flask(__name__)
 app_path = os.path.dirname(os.path.realpath(__file__))
 
 CLIENT_ID = json.loads(
-    open(app_path+'\client_secrets.json', 'r').read())['web']['client_id']
+    open(app_path + '\client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Item Catalog Application"
 
 
@@ -97,7 +97,7 @@ def gconnect():
     code = msg
     try:
         # Upgrade the authorization code into a credentials object
-        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        oauth_flow = flow_from_clientsecrets(app_path + '\client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError as e:
@@ -112,7 +112,7 @@ def gconnect():
     url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
            % access_token)
     h = httplib2.Http()
-    result = json.loads(h.request(url, 'GET')[1])
+    result = json.loads(h.request(url, 'GET')[1].decode('utf-8'))
     # If there was an error in the access token info, abort.
     if result.get('error') is not None:
         response = make_response(json.dumps(result.get('error')), 500)
@@ -182,10 +182,10 @@ def fbconnect():
     access_token = msg
     print("access token received %s " % access_token)
 
-    app_id = json.loads(open(app_path+'\fb_client_secrets.json', 'r').read())[
+    app_id = json.loads(open(app_path + '\fb_client_secrets.json', 'r').read())[
         'web']['app_id']
     app_secret = json.loads(
-        open('fb_client_secrets.json', 'r').read())['web']['app_secret']
+        open(app_path + '\fb_client_secrets.json', 'r').read())['web']['app_secret']
     url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (
         app_id, app_secret, access_token)
     h = httplib2.Http()
@@ -213,7 +213,7 @@ def fbconnect():
     result = h.request(url, 'GET')[1]
     # print "url sent for API access:%s"% url
     # print "API JSON result: %s" % result
-    data = json.loads(result)
+    data = json.loads(result.decode('utf-8'))
     login_session['provider'] = 'facebook'
     login_session['username'] = data["name"]
     login_session['email'] = data["email"]
@@ -226,7 +226,7 @@ def fbconnect():
     url = 'https://graph.facebook.com/v2.8/me/picture?access_token=%s&redirect=0&height=200&width=200' % token
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
-    data = json.loads(result)
+    data = json.loads(result.decode('utf-8'))
 
     login_session['picture'] = data["data"]["url"]
 
