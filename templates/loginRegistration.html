@@ -17,6 +17,7 @@
     <script src="{{ url_for('static', filename='jquery.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
     <script src="//apis.google.com/js/platform.js?onload=start"></script>
+
     <script>
         $(function () {
 
@@ -38,6 +39,7 @@
         });
 
     </script>
+
     <script>
         function signInCallback(authResult) {
             if (authResult['code']) {
@@ -64,6 +66,7 @@
                 });
             }
         }
+
     </script>
     <!--FACEBOOK SIGN IN -->
     <script>
